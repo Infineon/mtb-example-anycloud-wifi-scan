@@ -90,13 +90,14 @@ int main()
 
     /* Initialize the board support package. */
     result = cybsp_init();
-    CHECK_RESULT(result);
+    error_handler(result, NULL);
 
     result = cyhal_gpio_init(CYBSP_USER_LED, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, CYBSP_LED_STATE_OFF);
-    CHECK_RESULT(result);
+    error_handler(result, NULL);
+    is_led_initialized = true;
 
     result = cyhal_gpio_init(CYBSP_USER_BTN, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, CYBSP_BTN_OFF);
-    CHECK_RESULT(result);
+    error_handler(result, NULL);
 
     /* Configure GPIO interrupt. */
     cyhal_gpio_register_callback(CYBSP_USER_BTN, gpio_interrupt_handler, NULL);
@@ -107,7 +108,8 @@ int main()
 
     /* Initialize retarget-io to use the debug UART port. */
     result = cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX, CY_RETARGET_IO_BAUDRATE);
-    CHECK_RESULT(result);
+    error_handler(result, NULL);
+    is_retarget_io_initialized = true;
 
     /* \x1b[2J\x1b[;H - ANSI ESC sequence for clear screen. */
     printf("\x1b[2J\x1b[;H");

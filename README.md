@@ -2,7 +2,7 @@
 
 This example demonstrates how to configure different scan filters provided in the Wi-Fi Connection Manager (WCM) middleware and scan for the available Wi-Fi networks. 
 
-The example initializes the Wi-Fi device and starts a Wi-Fi scan without any filter and prints the results on the serial terminal. Press the user button to change the type of scan filter applied and print the scan results on the serial terminal. Press the button again to observe the scan output for a different scan filter. The type of scan filter applied wraps around to no filter when the number of button presses exceeds the number of supported scan filters.
+The example initializes the Wi-Fi device and starts a Wi-Fi scan without any filter and prints the results on the serial terminal. The example starts a scan every 3 seconds after the previous scan completes. Press the user button to change the type of scan filter applied and print the scan results on the serial terminal. Press the button again to observe the scan output for a different scan filter. The type of scan filter applied wraps around to no filter when the number of button presses exceeds the number of supported scan filters.
 
 ## Requirements
 
@@ -44,7 +44,7 @@ This example requires no additional software or tools.
 
 3. In the **Project Creator - Choose Board Support Package (BSP)** dialog, choose the example.
 
-4. Optionally, update the **Application Name** and **Location** fields with the application name and local path where the application is created.
+4. Optionally, update the **Application Name:** and **Location** fields with the application name and local path where the application is created.
 
 5. Click **Create** to complete the application creation process.
 
@@ -56,7 +56,7 @@ For more details, see the Eclipse IDE for ModusToolbox User Guide: *{ModusToolbo
 
 2. Open a CLI terminal and navigate to the application folder. 
 
-   On Linux and macOS, you can use any terminal application. On Windows, navigate to the modus-shell directory (*{ModusToolbox install directory}/tools_\<version>/modus-shell*) and run *Cygwin.bat*.
+On Linux and macOS, you can use any terminal application. On Windows, navigate to the modus-shell directory (*{ModusToolbox install directory}/tools_\<version>/modus-shell*) and run *Cygwin.bat*.
 
 3. Import the required libraries by executing the `make getlibs` command.
 
@@ -75,7 +75,7 @@ For more details, see the *Exporting to IDEs* section of the ModusToolbox User G
 
 1. Connect the board to your PC using the provided USB cable through the KitProg3USB connector.
 
-2. Add the filter parameters to the macros `SCAN_FOR_SSID_VALUE`, `MAC_ADDRESS`, `SCAN_FOR_BAND_VALUE`, and `SCAN_FOR_RSSI_VALUE` defined in *scan_task.h*.
+2. Add the filter parameters to the macros `SCAN_FOR_SSID_VALUE`, `SCAN_FOR_MAC_ADDRESS`, `SCAN_FOR_BAND_VALUE`, and `SCAN_FOR_RSSI_VALUE` defined in *scan_task.h*.
 
 3. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud.
 
@@ -93,11 +93,12 @@ For more details, see the *Exporting to IDEs* section of the ModusToolbox User G
         ```
         make program TARGET=<BSP> TOOLCHAIN=<toolchain>
         ```
-        Example:
 
+        Example:
         ```
         make program TARGET=CY8CPROTO-062-4343W TOOLCHAIN=GCC_ARM
         ```
+
         **Note**:  Before building the application, ensure that the *deps* folder contains the BSP file (*TARGET_xxx.lib*) corresponding to the TARGET. Execute the `make getlibs` command to fetch the BSP contents before building the application.
 
    By default, there is no scan filter applied as shown in the sample output:
@@ -105,14 +106,14 @@ For more details, see the *Exporting to IDEs* section of the ModusToolbox User G
     **Figure 1. Scan Output with No Filter**
     ![](images/figure1.png)
 
-**Note**: The serial terminal output will contain duplicate SSID scan results.
+**Note**: The serial terminal output will contain duplicate SSID scan results because the WHD successively scans each channel and it is possible that it detects multiple probe responses from a network while scanning in the channel occupied by the network.
 
 5. Press the user button to switch to the *SSID scan filter*, which scans for only the network whose SSID is provided in `SCAN_FOR_SSID_VALUE`. 
 
     **Figure 2. Scan Output with SSID Filter**
     ![](images/figure2.png)
 
-6. Press the user button SW2 to switch to the *MAC address scan filter*, which scans for only the network whose MAC address is provided in `MAC_ADDRESS`. 
+6. Press the user button SW2 to switch to the *MAC address scan filter*, which scans for only the network whose MAC address is provided in `SCAN_FOR_MAC_ADDRESS`. 
 
     **Figure 3. Scan Output with MAC Address**
     ![](images/figure3.png)
@@ -136,7 +137,7 @@ You can debug the example to step through the code. In the IDE, use the **\<Appl
 
 ## Design and Implementation
 
-The main function initializes the button SW2, user LED, UART, and creates `scan_task` before starting the FreeRTOS scheduler. The `scan_task` is responsible for initializing the Wi-Fi device and starting the scan based on the filter type. The WCM middleware supports the following filter types:
+The main function initializes the user button (CYBSP_USER_BTN), user LED (CYBSP_USER_LED), UART, and creates `scan_task` before starting the FreeRTOS scheduler. The `scan_task` is responsible for initializing the Wi-Fi device and starting the scan based on the filter type. The WCM middleware supports the following filter types:
 
 1. No Filter: As the name indicates, all the Wi-Fi networks are provided to the scan callback function.
 
@@ -161,9 +162,9 @@ In this example, you can switch to a different type of filter by pressing the us
 
 | Resource  |  Alias/Object     |    Purpose     |
 | :------- | :------------    | :------------ |
-| UART (HAL)|cy_retarget_io_uart_obj| UART HAL object used by Retarget-IO for Debug UART port  |
-| GPIO (HAL)    | CYBSP_USER_LED         | User LED                  |
-| GPIO (HAL)    | CYBSP_USER_BTN         | User Button                  |
+| UART (HAL)|cy_retarget_io_uart_obj| UART HAL object used by Retarget-IO for Debug UART port.|
+| GPIO (HAL)    | CYBSP_USER_LED         | Turns on when there is an unrecoverable error.|
+| GPIO (HAL)    | CYBSP_USER_BTN         | Used to change the type of Wi-Fi scan filter applied.|
 
 
 ## Related Resources
@@ -205,13 +206,14 @@ Document Title: CE230270 - AnyCloud Example: Wi-Fi Scan
 | Version | Description of Change |
 | ------- | --------------------- |
 | 1.0.0   | New code example      |
+| 1.1.0   | Minor changes in Makefile and source files |
 
 ------
 
 
 All other trademarks or registered trademarks referenced herein are the property of their respective owners.
 
-![Banner](images/footer_banner.png)
+![banner](images/footer_banner.png)
 
 -------------------------------------------------------------------------------
 

@@ -78,6 +78,16 @@ const char* band_string[] =
     [CY_WCM_WIFI_BAND_5GHZ] = "5 GHz"
 };
 
+bool is_retarget_io_initialized = false;
+bool is_led_initialized = false;
+
+
+/*******************************************************************************
+ * Function Prototypes
+ ******************************************************************************/
+static void scan_callback( cy_wcm_scan_result_t *result_ptr, void *user_data, cy_wcm_scan_status_t status );
+static void print_scan_result(cy_wcm_scan_result_t *result);
+
 
 /*******************************************************************************
  * Function Definitions
@@ -107,7 +117,7 @@ void scan_task(void *arg)
     cy_wcm_scan_filter_t scan_filter;
     cy_rslt_t result = CY_RSLT_SUCCESS;
     cy_wcm_config_t wcm_config = { .interface = CY_WCM_INTERFACE_TYPE_STA };
-    cy_wcm_mac_t scan_for_mac_value = {MAC_ADDRESS};
+    cy_wcm_mac_t scan_for_mac_value = {SCAN_FOR_MAC_ADDRESS};
 
     memset(&scan_filter, 0, sizeof(cy_wcm_scan_filter_t));
     result = cy_wcm_init(&wcm_config);
@@ -143,7 +153,7 @@ void scan_task(void *arg)
                 break;
 
             case SCAN_FILTER_MAC:
-                APP_INFO(("Scanning for %X:*:*:*:*:%X.\n", scan_for_mac_value[0], scan_for_mac_value[5]));
+                APP_INFO(("Scanning for %X:%X:%X:%X:%X:%X.\n", scan_for_mac_value[0], scan_for_mac_value[1], scan_for_mac_value[2], scan_for_mac_value[3], scan_for_mac_value[4], scan_for_mac_value[5]));
 
                 /* Configure the scan filter for MAC specified by scan_for_mac_value
                  */
@@ -194,10 +204,8 @@ void scan_task(void *arg)
 /*******************************************************************************
  * Function Name: scan_callback
  *******************************************************************************
- * Summary: The callback function which accumulates the scan results. It checks
- * if the scan results have repeated by comparing the MAC address before
- * printing the scan results. After completing the scan, it sends a task
- * notification to scan_task.
+ * Summary: The callback function which accumulates the scan results. After
+ * completing the scan, it sends a task notification to scan_task.
  *
  * Parameters:
  *  cy_wcm_scan_result_t *result_ptr: Pointer to the scan result
@@ -208,7 +216,7 @@ void scan_task(void *arg)
  *  void
  *
  ******************************************************************************/
-void scan_callback(cy_wcm_scan_result_t *result_ptr, void *user_data, cy_wcm_scan_status_t status)
+static void scan_callback(cy_wcm_scan_result_t *result_ptr, void *user_data, cy_wcm_scan_status_t status)
 {
     if ((strlen((const char *)result_ptr->SSID) != 0) && (status == CY_WCM_SCAN_INCOMPLETE))
     {
@@ -216,7 +224,7 @@ void scan_callback(cy_wcm_scan_result_t *result_ptr, void *user_data, cy_wcm_sca
         print_scan_result(result_ptr);
     }
 
-    if ((num_scan_result >= MAX_SCAN_RESULT_COUNT) || (CY_WCM_SCAN_COMPLETE == status))
+    if ( (CY_WCM_SCAN_COMPLETE == status) )
     {
         /* Reset the number of scan results to 0 for the next scan.*/
         num_scan_result = 0;
@@ -241,7 +249,7 @@ void scan_callback(cy_wcm_scan_result_t *result_ptr, void *user_data, cy_wcm_sca
  *  void
  *
  ******************************************************************************/
-void print_scan_result(cy_wcm_scan_result_t *result)
+static void print_scan_result(cy_wcm_scan_result_t *result)
 {
     char* security_type_string;
 
@@ -300,9 +308,10 @@ void print_scan_result(cy_wcm_scan_result_t *result)
         break;
     }
 
-    printf(" %2ld   %-32s     %4d     %2d         %-10s\n",
+    printf(" %2ld   %-32s     %4d     %2d      %2X:%2X:%2X:%2X:%2X:%2X         %-15s\n",
            num_scan_result, result->SSID,
-           result->signal_strength, result->channel,
+           result->signal_strength, result->channel, result->BSSID[0], result->BSSID[1],
+           result->BSSID[2], result->BSSID[3], result->BSSID[4], result->BSSID[5],
            security_type_string);
 }
 
@@ -351,12 +360,21 @@ void gpio_interrupt_handler(void *handler_arg, cyhal_gpio_event_t event)
 * Note: If error occurs, interrupts are disabled.
 *
 *******************************************************************************/
-void error_handler(cy_rslt_t result, char *message)
+void error_handler(cy_rslt_t result, char* message)
 {
-    if (CY_RSLT_SUCCESS != result)
+    if(CY_RSLT_SUCCESS != result)
     {
-        cyhal_gpio_write(CYBSP_USER_LED, CYBSP_LED_STATE_ON);
-        ERR_INFO(("%s", message));
+        if(is_led_initialized)
+        {
+            cyhal_gpio_write(CYBSP_USER_LED, CYBSP_LED_STATE_ON);
+        }
+
+        if( is_retarget_io_initialized && (NULL != message) )
+        {
+            ERR_INFO(("%s", message));
+        }
+
+        __disable_irq();
         CY_ASSERT(0);
     }
 }

@@ -65,7 +65,7 @@
  * results. For example, MAC Address: 12:34:56:78:9A:BC should be entered as
  * shown below.
  */
-#define MAC_ADDRESS                             0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC
+#define SCAN_FOR_MAC_ADDRESS                     0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC
 
 /* Provide the value of the ISM band (2.4 GHz/ 5 GHz/ both) which should be used
  * to filter the scan results. The valid values are provided in the enumeration
@@ -80,9 +80,6 @@
  * cy_wcm_scan_rssi_range_t in cy_wcm.h.
  */
 #define SCAN_FOR_RSSI_VALUE                     CY_WCM_SCAN_RSSI_EXCELLENT
-
-/* Maximum distinct scan results whose BSSID can be stored.*/
-#define MAX_SCAN_RESULT_COUNT                   (20u)
 
 /* The delay in milliseconds between successive scans.*/
 #define SCAN_DELAY_MS                           (3000u)
@@ -109,21 +106,18 @@
 #define SECURITY_WPS_SECURE                     "WPS-SECURE"
 #define SECURITY_UNKNOWN                        "UNKNOWN"
 
-#define PRINT_SCAN_TEMPLATE()                   printf("\n---------------------------------------------------------------------------------\n" \
-                                                "  #                  SSID                  RSSI   Channel      Security\n" \
-                                                "---------------------------------------------------------------------------------\n");
+#define PRINT_SCAN_TEMPLATE()                   printf("\n----------------------------------------------------------------------------------------------------\n" \
+                                                "  #                  SSID                  RSSI   Channel       MAC Address              Security\n" \
+                                                "----------------------------------------------------------------------------------------------------\n");
 
 #define APP_INFO( x )           do { printf("\nInfo: "); printf x;} while(0);
 #define ERR_INFO( x )           do { printf("\nError: "); printf x;} while(0);
-#define CHECK_RESULT( x )       do { if(CY_RSLT_SUCCESS != x) { CY_ASSERT(0); } } while(0);
 
 
 /*******************************************************************************
  * Function Prototypes
  ******************************************************************************/
 void scan_task(void* arg);
-void scan_callback( cy_wcm_scan_result_t *result_ptr, void *user_data, cy_wcm_scan_status_t status );
-void print_scan_result(cy_wcm_scan_result_t *result);
 void gpio_interrupt_handler(void *handler_arg, cyhal_gpio_event_t event);
 void error_handler(cy_rslt_t result, char *message);
 
@@ -151,11 +145,14 @@ enum scan_filter_mode
     SCAN_FILTER_INVALID
 };
 
+
 /*******************************************************************************
  * Global Variables
  ******************************************************************************/
 /* Network connection task handle */
 extern TaskHandle_t scan_task_handle;
+extern bool is_retarget_io_initialized;
+extern bool is_led_initialized;
 
 #endif /* SOURCE_SCAN_TASK_H_ */
 
