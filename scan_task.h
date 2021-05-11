@@ -6,6 +6,7 @@
 *
 * Related Document: See README.md
 *
+*
 *******************************************************************************
 * Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
@@ -102,7 +103,16 @@
 #define SECURITY_WPA2_MIXED_PSK                 "WPA2-MIXED-PSK"
 #define SECURITY_WPA2_FBT_PSK                   "WPA2-FBT-PSK"
 #define SECURITY_WPA3_SAE                       "WPA3-SAE"
+#define SECURITY_WPA2_WPA_AES_PSK               "WPA2-WPA-AES-PSK"
+#define SECURITY_WPA2_WPA_MIXED_PSK             "WPA2-WPA-MIXED-PSK"
 #define SECURITY_WPA3_WPA2_PSK                  "WPA3-WPA2-PSK"
+#define SECURITY_WPA_TKIP_ENT                   "WPA-TKIP-ENT"
+#define SECURITY_WPA_AES_ENT                    "WPA-AES-ENT"
+#define SECURITY_WPA_MIXED_ENT                  "WPA-MIXED-ENT"
+#define SECURITY_WPA2_TKIP_ENT                  "WPA2-TKIP-ENT"
+#define SECURITY_WPA2_AES_ENT                   "WPA2-AES-ENT"
+#define SECURITY_WPA2_MIXED_ENT                 "WPA2-MIXED-ENT"
+#define SECURITY_WPA2_FBT_ENT                   "WPA2-FBT-ENT"
 #define SECURITY_IBSS_OPEN                      "IBSS-OPEN"
 #define SECURITY_WPS_SECURE                     "WPS-SECURE"
 #define SECURITY_UNKNOWN                        "UNKNOWN"

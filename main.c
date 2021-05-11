@@ -3,7 +3,8 @@
 *
 * Description: This is the source code for Wi-Fi Scan Example in ModusToolbox.
 *
-* Related Document: See Readme.md
+* Related Document: See README.md
+*
 *
 *******************************************************************************
 * Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or

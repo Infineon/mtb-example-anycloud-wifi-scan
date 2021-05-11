@@ -1,58 +1,61 @@
-# AnyCloud Example: Wi-Fi Scan
+# AnyCloud: Wi-Fi Scan
 
 This example demonstrates how to configure different scan filters provided in the Wi-Fi Connection Manager (WCM) middleware and scan for the available Wi-Fi networks. 
 
 The example initializes the Wi-Fi device and starts a Wi-Fi scan without any filter and prints the results on the serial terminal. The example starts a scan every 3 seconds after the previous scan completes. Press the user button to change the type of scan filter applied and print the scan results on the serial terminal. Press the button again to observe the scan output for a different scan filter. The type of scan filter applied wraps around to no filter when the number of button presses exceeds the number of supported scan filters.
 
-[Provide feedback on this Code Example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyNzAiLCJTcGVjIE51bWJlciI6IjAwMi0zMDI3MCIsIkRvYyBUaXRsZSI6IkFueUNsb3VkIEV4YW1wbGU6IFdpLUZpIFNjYW4iLCJyaWQiOiJzYmtyIiwiRG9jIHZlcnNpb24iOiIyLjEuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this Code Example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyNzAiLCJTcGVjIE51bWJlciI6IjAwMi0zMDI3MCIsIkRvYyBUaXRsZSI6IkFueUNsb3VkOiBXaS1GaSBTY2FuIiwicmlkIjoibXVhYSIsIkRvYyB2ZXJzaW9uIjoiMi4yLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6IlBTT0MifQ==)
 
 ## Requirements
 
-- [ModusToolbox® software](https://www.cypress.com/products/modustoolbox-software-environment) v2.2  
+- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3
 
-    **Note:** This code example version requires ModusToolbox software version 2.2 or later and is not backward compatible with v2.1 or older versions. If you cannot move to ModusToolbox v2.2, use the latest compatible version of this example: [latest-v1.X](https://github.com/cypresssemiconductorco/mtb-example-anycloud-wifi-scan/tree/latest-v1.X).  
+    **Note:** This code example version requires ModusToolbox software version 2.2 or later and is not backward compatible with v2.1 or older versions. If you cannot move to ModusToolbox v2.2 or later, use the latest compatible version of this example: [latest-v1.X](https://github.com/cypresssemiconductorco/mtb-example-anycloud-wifi-scan/tree/latest-v1.X).  
 - Board Support Package (BSP) minimum required version: 2.0.0  
 - Programming Language: C  
-- Associated Parts: All [PSoC® 6 MCU](http://www.cypress.com/PSoC6) parts
+- Associated Parts: All [PSoC&trade; 6 MCU](http://www.cypress.com/PSoC6) parts with SDIO, [PSoC™ 6 MCU with AIROC™ CYW43012 Wi-Fi & Bluetooth® combo chip](https://www.cypress.com/documentation/datasheets/cyw43012-single-chip-ultra-low-power-ieee-80211n-compliant-ieee-80211ac), [PSoC™ 6 MCU with AIROC™ CYW4343W Wi-Fi & Bluetooth® combo chip](https://www.cypress.com/documentation/datasheets/cyw4343w-single-chip-80211-bgn-macbasebandradio-bluetooth-51)
 
-## Supported Toolchains (make variable 'TOOLCHAIN')
+## Supported toolchains (make variable 'TOOLCHAIN')
 
-- GNU Arm® Embedded Compiler v9.3.1 (GCC_ARM) - Default value of `TOOLCHAIN`
-- IAR C/C++ compiler v8.32.2 (IAR)
+- GNU Arm® Embedded Compiler v9.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
+- Arm compiler v6.13 (`ARM`)
+- IAR C/C++ compiler v8.42.2 (`IAR`)
 
-## Supported Kits (make variable 'TARGET')
+## Supported kits (make variable 'TARGET')
 
-- [PSoC 6 Wi-Fi BT Prototyping Kit](https://www.cypress.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`) - Default value of `TARGET`
-- [PSoC 6 WiFi-BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062-WiFi-BT) (`CY8CKIT-062-WIFI-BT`)
-- [PSoC 62S2 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
-- [PSoC 62S1 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
-- [PSoC 62S1 Wi-Fi BT Pioneer Kit](https://www.cypress.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
+- [PSoC 6 Wi-Fi Bluetooth prototyping kit](https://www.cypress.com/CY8CPROTO-062-4343W) (`CY8CPROTO-062-4343W`) - Default value of `TARGET`
+- [PSoC 6 WiFi Bluetooth pioneer kit](https://www.cypress.com/CY8CKIT-062-WiFi-BT) (`CY8CKIT-062-WIFI-BT`)
+- [PSoC 62S2 Wi-Fi Bluetooth pioneer kit](https://www.cypress.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`)
+- [PSoC 62S1 Wi-Fi Bluetooth pioneer kit](https://www.cypress.com/CYW9P62S1-43438EVB-01) (`CYW9P62S1-43438EVB-01`)
+- [PSoC 62S1 Wi-Fi Bluetooth pioneer kit](https://www.cypress.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
 - CYSBSYSKIT-01 Rapid IoT Connect Platform RP01 Feather Kit (`CYSBSYSKIT-01`)
 - Rapid IoT Connect Developer Kit (`CYSBSYSKIT-DEV-01`)
 
-## Hardware Setup
+## Hardware setup
 
 This example uses the board's default configuration. See the kit user guide to ensure that the board is configured correctly.
 
-**Note:** The PSoC 6 WiFi-BT Pioneer Kit (CY8CKIT-062-WIFI-BT) ships with KitProg2 installed. The ModusToolbox software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/cypresssemiconductorco/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error like "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
+**Note:** The PSoC 6 WiFi Bluetooth pioneer kit (CY8CKIT-062-WIFI-BT) ships with KitProg2 installed. The ModusToolbox software requires KitProg3. Before using this code example, make sure that the board is upgraded to KitProg3. The tool and instructions are available in the [Firmware Loader](https://github.com/cypresssemiconductorco/Firmware-loader) GitHub repository. If you do not upgrade, you will see an error such as "unable to find CMSIS-DAP device" or "KitProg firmware is out of date".
 
-## Software Setup
+## Software setup
 
-Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en).
+Install a terminal emulator if you do not have one. Instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en).
 
 This example requires no additional software or tools.
 
-## Using the Code Example
+## Using the code example
 
-### In Eclipse IDE for ModusToolbox:
+Create the project and open it using one of the following:
 
-1. Click the **New Application** link in the **Quick Panel** (or, use **File** > **New** > **ModusToolbox Application**). This launches the [Project Creator](http://www.cypress.com/ModusToolboxProjectCreator) tool.
+<details><summary><b>In Eclipse IDE for ModusToolbox</b></summary>
+
+1. Click the **New Application** link in the **Quick Panel** (or use **File** > **New** > **ModusToolbox Application**). This launches the [Project Creator](http://www.cypress.com/ModusToolboxProjectCreator) tool.
 
 2. Pick a kit supported by the code example from the list shown in the **Project Creator - Choose Board Support Package (BSP)** dialog.
 
-   When you select a supported kit, the example is reconfigured automatically to work with the kit. To work with a different supported kit later, use the [Library Manager](https://www.cypress.com/ModusToolboxLibraryManager) to choose the BSP for the supported kit. You can use the Library Manager to select or update the BSP and firmware libraries used in this application. To access the Library Manager, click the link from the **Quick Panel**.
+   When you select a supported kit, the example is reconfigured automatically to work with the kit. To work with a different supported kit, use the [Library Manager](https://www.cypress.com/ModusToolboxLibraryManager) to choose the BSP for the supported kit. You can use the Library Manager to select or update the BSP and firmware libraries used in this application. To access the Library Manager, click the link from the **Quick Panel**.
 
-   You can also just start the application creation process again and select a different kit.
+   You can also start the application creation process again and select a different kit.
 
    If you want to use the application for a kit not listed here, you may need to update the source files. If the kit does not have the required resources, the application may not work.
 
@@ -68,13 +71,15 @@ This example requires no additional software or tools.
 
 For more details, see the [Eclipse IDE for ModusToolbox User Guide](https://www.cypress.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox install directory}/ide_{version}/docs/mt_ide_user_guide.pdf*).
 
-### In Command-line Interface (CLI):
+</details>
+
+<details><summary><b>In command-line interface (CLI)</b></summary>
 
 ModusToolbox provides the Project Creator as both a GUI tool and a command line tool to easily create one or more ModusToolbox applications. See the "Project Creator Tools" section of the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) for more details.
 
 Alternatively, you can manually create the application using the following steps:
 
-1. Download and unzip this repository onto your local machine, or clone the repository.
+1. Download and unzip this repository on to your local machine, or clone the repository.
 
 2. Open a CLI terminal and navigate to the application folder.
 
@@ -86,15 +91,19 @@ Alternatively, you can manually create the application using the following steps
 
 Various CLI tools include a `-h` option that prints help information to the terminal screen about that tool. For more details, see the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox install directory}/docs_{version}/mtb_user_guide.pdf*).
 
-### In Third-party IDEs:
+</details>
 
-1. Follow the instructions from the [CLI](#in-command-line-interface-cli) section to create the application, and import the libraries using the `make getlibs` command.
+<details><summary><b>In third-party IDEs</b></summary>
+
+1. Follow the instructions from the **In command-line interface (CLI)** section to create the application, and import the libraries using the `make getlibs` command.
 
 2. Export the application to a supported IDE using the `make <ide>` command.
 
-    For a list of supported IDEs and more details, see the "Exporting to IDEs" section of the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox install directory}/docs_{version}/mtb_user_guide.pdf*.
+   For a list of supported IDEs and more details, see the "Exporting to IDEs" section of the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox install directory}/docs_{version}/mtb_user_guide.pdf*.
 
 3. Follow the instructions displayed in the terminal to create or import the application as an IDE project.
+
+</details>
 
 ## Operation
 
@@ -104,15 +113,16 @@ Various CLI tools include a `-h` option that prints help information to the term
 
 3. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud.
 
-4. Program the board.
+4. Program the board using one of the following:
 
-   - **Using Eclipse IDE for ModusToolbox:**
+   <details><summary><b>Using Eclipse IDE for ModusToolbox</b></summary>
 
       1. Select the application project in the Project Explorer.
 
       2. In the **Quick Panel**, scroll down, and click **\<Application Name> Program (KitProg3_MiniProg4)**.
+      </details>
 
-   - **Using CLI:**
+   <details><summary><b>Using CLI</b></summary>
 
      From the terminal, execute the `make program` command to build and program the application using the default toolchain to the default target. You can specify a target and toolchain manually:
       ```
@@ -123,8 +133,9 @@ Various CLI tools include a `-h` option that prints help information to the term
       ```
       make program TARGET=CY8CPROTO-062-4343W TOOLCHAIN=GCC_ARM
       ```
+</details>
 
-    By default, there is no scan filter applied as shown in the sample output:
+    By default, there is no scan filter applied as shown in the sample output.
 
     **Figure 1. Scan Output with No Filter**
 
@@ -132,27 +143,27 @@ Various CLI tools include a `-h` option that prints help information to the term
 
     **Note:** The serial terminal output will contain duplicate SSID scan results because the WHD successively scans each channel and it is possible that it detects multiple probe responses from a network while scanning in the channel occupied by the network.
 
-5. Press the user button to switch to the *SSID scan filter*, which scans for only the network whose SSID is provided in `SCAN_FOR_SSID_VALUE`. 
+5. Press the user button to switch to the *SSID scan filter*, which scans only for the network whose SSID is provided in `SCAN_FOR_SSID_VALUE`. 
 
     **Figure 2. Scan Output with SSID Filter**
 
     ![](images/figure2.png)
 
-6. Press the user button (SW2) to switch to the *MAC address scan filter*, which scans for only the network whose MAC address is provided in `SCAN_FOR_MAC_ADDRESS`. 
+6. Press the user button (SW2) to switch to the *MAC address scan filter*, which scans only for the network whose MAC address is provided in `SCAN_FOR_MAC_ADDRESS`. 
 
     **Figure 3. Scan Output with MAC Address**
 
     ![](images/figure3.png)
 
-7. Press SW2 again to switch to the *ISM band scan filter*, which scans for only the networks which advertize in the frequency band provided in `SCAN_FOR_BAND_VALUE`. 
+7. Press SW2 again to switch to the *ISM band scan filter*, which scans only for the networks that advertize in the frequency band provided in `SCAN_FOR_BAND_VALUE`. 
 
-   **Note:** The targets CY8CPROTO-062-4343W, CY8CKIT-062-WIFI-BT, and CYW9P62S1-43438EVB-01 use CYW4343X which is a single-band device; it can detect only those networks occupying the 2.4-GHz band.
+   **Note:** The targets CY8CPROTO-062-4343W, CY8CKIT-062-WIFI-BT, and CYW9P62S1-43438EVB-01 use CYW4343X, which is a single-band device; it can detect only those networks occupying the 2.4-GHz band.
 
     **Figure 4. Scan Output with Frequency Band Filter**
 
     ![](images/figure4.png)
 
-8. Press SW2 again to switch to the *RSSI range scan filter*, which scans for only the networks whose RSSI is better than the RSSI provided in `SCAN_FOR_RSSI_VALUE`. 
+8. Press SW2 again to switch to the *RSSI range scan filter*, which scans only for the networks whose RSSI is better than the RSSI provided in `SCAN_FOR_RSSI_VALUE`. 
 
     **Figure 5. Scan Output with RSSI Filter**
 
@@ -163,13 +174,13 @@ Various CLI tools include a `-h` option that prints help information to the term
 
 ## Debugging
 
-You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For more details, see the "Program and Debug" section in the [Eclipse IDE for ModusToolbox User Guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
+You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For more details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox User Guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
 
 **Note:** **(Only while debugging)** On the CM4 CPU, some code in `main()` may execute before the debugger halts at the beginning of `main()`. This means that some code executes twice - once before the debugger stops execution, and again after the debugger resets the program counter to the beginning of `main()`. See [KBA231071](https://community.cypress.com/docs/DOC-21143) to learn about this and for the workaround.
 
-## Design and Implementation
+## Design and implementation
 
-The main function initializes the user button (`CYBSP_USER_BTN`), user LED (`CYBSP_USER_LED`), UART, and creates `scan_task` before starting the FreeRTOS scheduler. The `scan_task` is responsible for initializing the Wi-Fi device and starting the scan based on the filter type. The WCM middleware supports the following filter types:
+The main function initializes the user button (`CYBSP_USER_BTN`), user LED (`CYBSP_USER_LED`), and UART, and creates `scan_task` before starting the FreeRTOS scheduler. The `scan_task` is responsible for initializing the Wi-Fi device and starting the scan based on the filter type. The WCM middleware supports the following filter types:
 
 1. **No Filter:** As the name indicates, all the Wi-Fi networks are provided to the scan callback function.
 
@@ -177,70 +188,71 @@ The main function initializes the user button (`CYBSP_USER_BTN`), user LED (`CYB
 
 3. **Filtering for MAC Address:** The scan callback receives only the networks whose MAC address matches with the MAC address filter parameter.
 
-4. **Filtering for Frequency Band:** The scan callback receives only the networks which are advertising in the frequency band provided as the filter parameter.
+4. **Filtering for Frequency Band:** The scan callback receives only the networks that advertize in the frequency band provided as the filter parameter.
 
-5. **Filtering for RSSI:** The scan callback receives only the networks which have RSSI greater than the RSSI provided as the filter parameter.
+5. **Filtering for RSSI:** The scan callback receives only the networks that have RSSI greater than the RSSI provided as the filter parameter.
 
 The scan callback function is executed under the context of the WCM middleware's worker thread. After the scan is completed, the scan callback sends a task notification to `scan_task` because the `cy_wcm_start_scan` is a non-blocking function and returns without waiting for the scan to complete.
 
 In this example, you can switch to a different type of filter by pressing SW2. An ISR increments the `scan_filter_mode_select` global variable of the `scan_filter_mode` enumeration type to let `scan_task` know the type of the filter to be applied. The value of `scan_filter_mode` is reset to `SCAN_FILTER_NONE` when the variable is incremented to `SCAN_FILTER_INVALID`.
 
-### Resources and Settings
+### Resources and settings
 
-**Table 1. Application Resources**
+**Table 1. Application resources**
 
-| Resource  |  Alias/Object     |    Purpose     |
+| Resource  |  Alias/object     |    Purpose     |
 | :------- | :------------    | :------------ |
 | UART (HAL)|cy_retarget_io_uart_obj| UART HAL object used by Retarget-IO for Debug UART port |
-| GPIO (HAL)    | CYBSP_USER_LED         | Turns on when there is an unrecoverable error |
+| GPIO (HAL)    | CYBSP_USER_LED         | Turns on when there is an irrecoverable error |
 | GPIO (HAL)    | CYBSP_USER_BTN         | Used to change the type of Wi-Fi scan filter applied |
 
 
-## Related Resources
+## Related resources
 
-| Application Notes                                            |                                                              |
+| Application notes                                            |                                                              |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
-| [AN228571](https://www.cypress.com/AN228571) – Getting Started with PSoC 6 MCU on ModusToolbox | Describes PSoC 6 MCU devices and how to build your first application with ModusToolbox |
-| [AN221774](https://www.cypress.com/AN221774) – Getting Started with PSoC 6 MCU on PSoC Creator | Describes PSoC 6 MCU devices and how to build your first application with PSoC Creator |
-| [AN210781](https://www.cypress.com/AN210781) – Getting Started with PSoC 6 MCU with Bluetooth Low Energy (BLE) Connectivity on PSoC Creator | Describes PSoC 6 MCU with BLE Connectivity devices and how to build your first application with PSoC Creator |
-| [AN215656](https://www.cypress.com/AN215656) – PSoC 6 MCU: Dual-CPU System Design | Describes the dual-CPU architecture in PSoC 6 MCU, and shows how to build a simple dual-CPU design |
-| **Code Examples**                                            |                                                              |
+| [AN228571](https://www.cypress.com/AN228571) – Getting started with PSoC 6 MCU on ModusToolbox | Describes PSoC 6 MCU devices and how to build your first application with ModusToolbox |
+| [AN221774](https://www.cypress.com/AN221774) – Getting started with PSoC 6 MCU on PSoC Creator | Describes PSoC 6 MCU devices and how to build your first application with PSoC Creator |
+| [AN210781](https://www.cypress.com/AN210781) – Getting started with PSoC 6 MCU with Bluetooth Low Energy connectivity on PSoC Creator | Describes PSoC 6 MCU with Bluetooth Loe Energy connectivity devices and how to build your first application with PSoC Creator |
+| [AN215656](https://www.cypress.com/AN215656) – PSoC 6 MCU: dual-CPU system design | Describes the dual-CPU architecture in PSoC 6 MCU, and shows how to build a simple dual-CPU design |
+| **Code examples**                                            |                                                              |
 | [Using ModusToolbox](https://github.com/cypresssemiconductorco/Code-Examples-for-ModusToolbox-Software) | [Using PSoC Creator](https://www.cypress.com/documentation/code-examples/psoc-6-mcu-code-examples) |
-| **Device Documentation**                                     |                                                              |
-| [PSoC 6 MCU Datasheets](https://www.cypress.com/search/all?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A575&f[2]=field_related_products%3A114026) | [PSoC 6 Technical Reference Manuals](https://www.cypress.com/search/all/PSoC%206%20Technical%20Reference%20Manual?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A583) |
-| **Development Kits**                                         | Buy at www.cypress.com                                       |
-| [CY8CKIT-062-WiFi-BT](https://www.cypress.com/CY8CKIT-062-WiFi-BT) PSoC 6 WiFi-BT Pioneer Kit | [CY8CPROTO-062-4343W](https://www.cypress.com/CY8CPROTO-062-4343W) PSoC 6 Wi-Fi BT Prototyping Kit |
-| [CY8CKIT-062S2-43012](https://www.cypress.com/CY8CKIT-062S2-43012) PSoC 62S2 Wi-Fi BT Pioneer Kit | [CYW9P62S1-43438EVB-01](https://www.cypress.com/CYW9P62S1-43438EVB-01) PSoC 62S1 Wi-Fi BT Pioneer Kit |
-| [CYW9P62S1-43012EVB-01](https://www.cypress.com/CYW9P62S1-43012EVB-01) PSoC 62S1 Wi-Fi BT Pioneer Kit | CYSBSYSKIT-01 Rapid IoT Connect Platform RP01 Feather Kit |
-| CYSBSYSKIT-DEV-01 Rapid IoT Connect Developer Kit |                                                |
+| **Device documentation**                                     |                                                              |
+| [PSoC 6 MCU datasheets](https://www.cypress.com/search/all?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A575&f[2]=field_related_products%3A114026) | [PSoC 6 technical reference manuals](https://www.cypress.com/search/all/PSoC%206%20Technical%20Reference%20Manual?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A583) |
+| **Development kits**                                         | Buy at www.cypress.com                                       |
+| [CY8CKIT-062-WiFi-BT](https://www.cypress.com/CY8CKIT-062-WiFi-BT) PSoC 6 WiFi Bluetooth pioneer kit | [CY8CPROTO-062-4343W](https://www.cypress.com/CY8CPROTO-062-4343W) PSoC 6 Wi-Fi Bluetooth prototyping kit |
+| [CY8CKIT-062S2-43012](https://www.cypress.com/CY8CKIT-062S2-43012) PSoC 62S2 Wi-Fi Bluetooth pioneer kit | [CYW9P62S1-43438EVB-01](https://www.cypress.com/CYW9P62S1-43438EVB-01) PSoC 62S1 Wi-Fi Bluetooth pioneer kit |
+| [CYW9P62S1-43012EVB-01](https://www.cypress.com/CYW9P62S1-43012EVB-01) PSoC 62S1 Wi-Fi Bluetooth pioneer kit | CYSBSYSKIT-01 Rapid IoT connect platform RP01 feather kit |
+| CYSBSYSKIT-DEV-01 Rapid IoT connect developer kit |                                                |
 | **Libraries**                                                 |                                                              |
-| PSoC 6 Peripheral Driver Library (PDL) and docs  | [mtb-pdl-cat1](https://github.com/cypresssemiconductorco/mtb-pdl-cat1) on GitHub |
-| Cypress Hardware Abstraction Layer (HAL) Library and docs     | [mtb-hal-cat1](https://github.com/cypresssemiconductorco/mtb-hal-cat1) on GitHub |
+| PSoC 6 peripheral driver library (PDL) and docs  | [mtb-pdl-cat1](https://github.com/cypresssemiconductorco/mtb-pdl-cat1) on GitHub |
+| Hardware abstraction layer (HAL) Library and docs    | [mtb-hal-cat1](https://github.com/cypresssemiconductorco/mtb-hal-cat1) on GitHub |
 | Retarget IO - A utility library to retarget the standard input/output (STDIO) messages to a UART port | [retarget-io](https://github.com/cypresssemiconductorco/retarget-io) on GitHub |
 | **Middleware**                                               |                                                              |
-| CapSense® library and docs                                    | [capsense](https://github.com/cypresssemiconductorco/capsense) on GitHub |
+| CapSense&trade; library and docs                                   | [capsense](https://github.com/cypresssemiconductorco/capsense) on GitHub |
 | Wi-Fi Connection Manager (WCM)                                    | [wifi-connection-manager](https://github.com/cypresssemiconductorco/wifi-connection-manager) on GitHub |
-| Links to all PSoC 6 MCU Middleware                           | [psoc6-middleware](https://github.com/cypresssemiconductorco/psoc6-middleware) on GitHub |
+| Links to all PSoC 6 MCU middleware                           | [psoc6-middleware](https://github.com/cypresssemiconductorco/psoc6-middleware) on GitHub |
 | **Tools**                                                    |                                                              |
 | [Eclipse IDE for ModusToolbox](https://www.cypress.com/modustoolbox) | The cross-platform, Eclipse-based IDE for IoT designers that supports application configuration and development targeting converged MCU and wireless systems. |
 | [PSoC Creator™](https://www.cypress.com/products/psoc-creator-integrated-design-environment-ide) | The Cypress IDE for PSoC and FM0+ MCU development. |
 
-## Other Resources
+## Other resources
 
 Cypress provides a wealth of data at www.cypress.com to help you select the right device, and quickly and effectively integrate it into your design.
 
-For PSoC 6 MCU devices, see [How to Design with PSoC 6 MCU - KBA223067](https://community.cypress.com/docs/DOC-14644) in the Cypress community.
+For PSoC 6 MCU devices, see [How to design with PSoC 6 MCU - KBA223067](https://community.cypress.com/docs/DOC-14644) in the Cypress community.
 
-## Document History
+## Document history
 
-Document Title: CE230270 - AnyCloud Example: Wi-Fi Scan
+Document title: CE230270 - AnyCloud: Wi-Fi Scan
 
-| Version | Description of Change |
+| Version | Description of change |
 | ------- | --------------------- |
 | 1.0.0   | New code example      |
 | 1.1.0   | Minor changes in Makefile and source files |
 | 2.0.0   | Major update to support ModusToolbox software v2.2.<br> This version is not backward compatible with ModusToolbox software v2.1  |
 | 2.1.0   | Added support for CYSBSYSKIT-01 and CYSBSYSKIT-DEV-01 |
+| 2.2.0   | Updated to FreeRTOS v10.3.1                           |
 ------
 
 All other trademarks or registered trademarks referenced herein are the property of their respective owners.

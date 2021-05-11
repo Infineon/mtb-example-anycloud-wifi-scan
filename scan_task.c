@@ -7,6 +7,7 @@
 *
 * Related Document: See README.md
 *
+*
 *******************************************************************************
 * Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
@@ -45,6 +46,7 @@
  ******************************************************************************/
 #include "cybsp.h"
 #include "cyhal.h"
+#include <inttypes.h>
 
 /* FreeRTOS header file.*/
 #include "FreeRTOS.h"
@@ -153,7 +155,7 @@ void scan_task(void *arg)
                 break;
 
             case SCAN_FILTER_MAC:
-                APP_INFO(("Scanning for %X:%X:%X:%X:%X:%X.\n", scan_for_mac_value[0], scan_for_mac_value[1], scan_for_mac_value[2], scan_for_mac_value[3], scan_for_mac_value[4], scan_for_mac_value[5]));
+                APP_INFO(("Scanning for %02X:%02X:%02X:%02X:%02X:%02X.\n", scan_for_mac_value[0], scan_for_mac_value[1], scan_for_mac_value[2], scan_for_mac_value[3], scan_for_mac_value[4], scan_for_mac_value[5]));
 
                 /* Configure the scan filter for MAC specified by scan_for_mac_value
                  */
@@ -303,12 +305,39 @@ static void print_scan_result(cy_wcm_scan_result_t *result)
     case CY_WCM_SECURITY_UNKNOWN:
         security_type_string = SECURITY_UNKNOWN;
         break;
+    case CY_WCM_SECURITY_WPA2_WPA_AES_PSK:
+        security_type_string = SECURITY_WPA2_WPA_AES_PSK;
+        break;
+    case CY_WCM_SECURITY_WPA2_WPA_MIXED_PSK:
+        security_type_string = SECURITY_WPA2_WPA_MIXED_PSK;
+        break;
+    case CY_WCM_SECURITY_WPA_TKIP_ENT:
+        security_type_string = SECURITY_WPA_TKIP_ENT;
+        break;
+    case CY_WCM_SECURITY_WPA_AES_ENT:
+        security_type_string = SECURITY_WPA_AES_ENT;
+        break;
+    case CY_WCM_SECURITY_WPA_MIXED_ENT:
+        security_type_string = SECURITY_WPA_MIXED_ENT;
+        break;
+    case CY_WCM_SECURITY_WPA2_TKIP_ENT:
+        security_type_string = SECURITY_WPA2_TKIP_ENT;
+        break;
+    case CY_WCM_SECURITY_WPA2_AES_ENT:
+        security_type_string = SECURITY_WPA2_AES_ENT;
+        break;
+    case CY_WCM_SECURITY_WPA2_MIXED_ENT:
+        security_type_string = SECURITY_WPA2_MIXED_ENT;
+        break;
+    case CY_WCM_SECURITY_WPA2_FBT_ENT:
+        security_type_string = SECURITY_WPA2_FBT_ENT;
+        break;
     default:
         security_type_string = SECURITY_UNKNOWN;
         break;
     }
 
-    printf(" %2ld   %-32s     %4d     %2d      %2X:%2X:%2X:%2X:%2X:%2X         %-15s\n",
+    printf(" %2"PRIu32"   %-32s     %4d     %2d      %02X:%02X:%02X:%02X:%02X:%02X         %-15s\n",
            num_scan_result, result->SSID,
            result->signal_strength, result->channel, result->BSSID[0], result->BSSID[1],
            result->BSSID[2], result->BSSID[3], result->BSSID[4], result->BSSID[5],
