@@ -1,13 +1,15 @@
-/*******************************************************************************
-* File Name:   main.c
+/******************************************************************************
+* File Name:   heap_usage.c
 *
-* Description: This is the source code for Wi-Fi Scan Example in ModusToolbox.
+* Description: This file contains the code for printing heap usage.
+*              Supports only GCC_ARM compiler. Define PRINT_HEAP_USAGE for
+*              printing the heap usage numbers.
 *
 * Related Document: See README.md
 *
 *
 *******************************************************************************
-* Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2021, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -39,91 +41,61 @@
 * so agrees to indemnify Cypress against all liability.
 *******************************************************************************/
 
-#include "cybsp.h"
-#include "cyhal.h"
-#include "cy_retarget_io.h"
+/*******************************************************************************
+ * Header file includes
+ ******************************************************************************/
+#include <stdint.h>
+#include <inttypes.h>
+#include <stdio.h>
 
-/* FreeRTOS header file */
-#include <FreeRTOS.h>
-#include <task.h>
-#include <queue.h>
+/* ARM compiler also defines __GNUC__ */
+#if defined (__GNUC__) && !defined(__ARMCC_VERSION)
+#include <malloc.h>
+#endif /* #if defined (__GNUC__) && !defined(__ARMCC_VERSION) */
 
-/* Task header files */
-#include "scan_task.h"
 
 /*******************************************************************************
  * Macros
  ******************************************************************************/
-#define GPIO_INTERRUPT_PRIORITY             (7)
+#define TO_KB(size_bytes)  ((float)(size_bytes)/1024)
 
 
 /*******************************************************************************
- * Global Variables
+ * Function Definitions
  ******************************************************************************/
-
 
 /*******************************************************************************
- * Function definitions
- ******************************************************************************/
-
-
-/*******************************************************************************
- * Function Name: main
- *******************************************************************************
- * Summary:
- *  System entrance point. This function sets up user tasks and then starts
- *  the RTOS scheduler.
- *
- * Parameters:
- *  void
- *
- * Return:
- *  int
- *
- ******************************************************************************/
-int main()
+* Function Name: print_heap_usage
+********************************************************************************
+* Summary:
+* Prints the available heap and utilized heap by using mallinfo().
+*
+*******************************************************************************/
+void print_heap_usage(char *msg)
 {
-    cy_rslt_t result;
+    /* ARM compiler also defines __GNUC__ */
+#if defined(PRINT_HEAP_USAGE) && defined (__GNUC__) && !defined(__ARMCC_VERSION)
+    struct mallinfo mall_info = mallinfo();
 
-    /* Initialize the board support package. */
-    result = cybsp_init();
-    error_handler(result, NULL);
+    extern uint8_t __HeapBase;  /* Symbol exported by the linker. */
+    extern uint8_t __HeapLimit; /* Symbol exported by the linker. */
 
-    result = cyhal_gpio_init(CYBSP_USER_LED, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, CYBSP_LED_STATE_OFF);
-    error_handler(result, NULL);
-    is_led_initialized = true;
+    uint8_t* heap_base = (uint8_t *)&__HeapBase;
+    uint8_t* heap_limit = (uint8_t *)&__HeapLimit;
+    uint32_t heap_size = (uint32_t)(heap_limit - heap_base);
 
-    result = cyhal_gpio_init(CYBSP_USER_BTN, CYHAL_GPIO_DIR_INPUT, CYHAL_GPIO_DRIVE_PULLUP, CYBSP_BTN_OFF);
-    error_handler(result, NULL);
+    printf("\r\n\n********** Heap Usage **********\r\n");
+    printf(msg);
+    printf("\r\nTotal available heap        : %"PRIu32" bytes/%.2f KB\r\n", heap_size, TO_KB(heap_size));
 
-    /* Configure GPIO interrupt. */
-    cyhal_gpio_register_callback(CYBSP_USER_BTN, gpio_interrupt_handler, NULL);
-    cyhal_gpio_enable_event(CYBSP_USER_BTN, CYHAL_GPIO_IRQ_FALL, GPIO_INTERRUPT_PRIORITY, true);
+    printf("Maximum heap utilized so far: %u bytes/%.2f KB, %.2f%% of available heap\r\n",
+            mall_info.arena, TO_KB(mall_info.arena), ((float) mall_info.arena * 100u)/heap_size);
 
-    /* Enable global interrupts. */
-    __enable_irq();
+    printf("Heap in use at this point   : %u bytes/%.2f KB, %.2f%% of available heap\r\n",
+            mall_info.uordblks, TO_KB(mall_info.uordblks), ((float) mall_info.uordblks * 100u)/heap_size);
 
-    /* Initialize retarget-io to use the debug UART port. */
-    result = cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX, CY_RETARGET_IO_BAUDRATE);
-    error_handler(result, NULL);
-    is_retarget_io_initialized = true;
-
-    /* \x1b[2J\x1b[;H - ANSI ESC sequence for clear screen. */
-    printf("\x1b[2J\x1b[;H");
-
-    printf("********************************************************\n"
-           "CE230270 - Wi-Fi Scan\n"
-           "********************************************************\n");
-
-    /* Create the tasks. */
-    xTaskCreate(scan_task, "Scan task", SCAN_TASK_STACK_SIZE, NULL, SCAN_TASK_PRIORITY, &scan_task_handle);
-
-    /* Start the FreeRTOS scheduler. */
-    vTaskStartScheduler();
-
-    /* Should never get here. */
-    CY_ASSERT(0);
+    printf("********************************\r\n\n");
+#endif /* #if defined(PRINT_HEAP_USAGE) && defined (__GNUC__) && !defined(__ARMCC_VERSION) */
 }
-
 
 /* [] END OF FILE */

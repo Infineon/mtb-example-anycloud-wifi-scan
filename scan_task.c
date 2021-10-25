@@ -89,6 +89,7 @@ bool is_led_initialized = false;
  ******************************************************************************/
 static void scan_callback( cy_wcm_scan_result_t *result_ptr, void *user_data, cy_wcm_scan_status_t status );
 static void print_scan_result(cy_wcm_scan_result_t *result);
+void print_heap_usage(char *msg);
 
 
 /*******************************************************************************
@@ -197,6 +198,9 @@ void scan_task(void *arg)
         {
             xTaskNotifyWait(0, 0, NULL, portMAX_DELAY);
         }
+
+        /* Define PRINT_HEAP_USAGE using DEFINES variable in the Makefile. */
+        print_heap_usage("After scan results are printed to UART");
 
         vTaskDelay(pdMS_TO_TICKS(SCAN_DELAY_MS));
     }
