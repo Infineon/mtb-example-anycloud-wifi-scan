@@ -6,7 +6,7 @@ The example initializes the Wi-Fi device, starts a Wi-Fi scan without any filter
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-wifi-scan)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyNzAiLCJTcGVjIE51bWJlciI6IjAwMi0zMDI3MCIsIkRvYyBUaXRsZSI6IldpLUZpIHNjYW4iLCJyaWQiOiJ5ZWt0IiwiRG9jIHZlcnNpb24iOiI0LjYuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzAyNzAiLCJTcGVjIE51bWJlciI6IjAwMi0zMDI3MCIsIkRvYyBUaXRsZSI6IldpLUZpIHNjYW4iLCJyaWQiOiJ2YWlyYW11dGh1IHJhbWFzYW15IiwiRG9jIHZlcnNpb24iOiI0LjcuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
 
 
 ## Requirements
@@ -32,7 +32,8 @@ The example initializes the Wi-Fi device, starts a Wi-Fi scan without any filter
 - [PSoC&trade; 62S1 Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CYW9P62S1-43012EVB-01) (`CYW9P62S1-43012EVB-01`)
 - [PSoC&trade; 62S3 Wi-Fi Bluetooth&reg; Prototyping Kit](https://www.infineon.com/CY8CPROTO-062S3-4343W) (`CY8CPROTO-062S3-4343W`)
 - [PSoC&trade; 64 "Secure Boot" Wi-Fi Bluetooth&reg; Pioneer Kit](https://www.infineon.com/CY8CKIT-064B0S2-4343W) (`CY8CKIT-064B0S2-4343W`)
-- [PSoC&trade; 62S2 Evaluation Kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-LAI-43439M2`, `CY8CEVAL-062S2-MUR-43439M2`, `CY8CEVAL-062S2-MUR-4373EM2`, `CY8CEVAL-062S2-MUR-4373M2`,`CY8CEVAL-062S2-CYW43022CUB`)
+- [PSoC&trade; 62S2 Evaluation Kit](https://www.infineon.com/CY8CEVAL-062S2) (`CY8CEVAL-062S2-LAI-4373M2`, `CY8CEVAL-062S2-LAI-43439M2`, `CY8CEVAL-062S2-MUR-43439M2`, `CY8CEVAL-062S2-MUR-4373EM2`, `CY8CEVAL-062S2-MUR-4373M2`,`CY8CEVAL-062S2-CYW43022CUB`,
+`CY8CEVAL-062S2-CYW955513SDM2WLIPA`)
 - [XMC7200 Evaluation Kit](https://www.infineon.com/KIT_XMC72_EVK) (`KIT_XMC72_EVK_MUR_43439M2`)
 - [PSoC&trade; 6 AI Evaluation Kit](https://www.infineon.com/CY8CKIT-062S2-AI) (`CY8CKIT-062S2-AI`)
 
@@ -330,6 +331,7 @@ Document title: *CE230270* - *Wi-Fi scan*
  4.4.0   | Added support for KIT_XMC72_EVK_MUR_43439M2 and updated to support ModusToolbox&trade; v3.1.
  4.5.0   | Added support for CY8CEVAL-062S2-CYW43022CUB
  4.6.0   | Added support for CY8CKIT-062S2-AI
+ 4.7.0   | Added support for CY8CEVAL-062S2-CYW955513SDM2WLIPA
 <br>
 
 
